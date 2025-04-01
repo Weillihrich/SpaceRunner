@@ -1,0 +1,14 @@
+# Virtuelle Umgebung ignorieren
+env/
+
+# __pycache__ und andere temporäre Dateien ignorieren
+__pycache__/
+*.pyc
+*.pyo
+
+# Datenbank (falls SQLite verwendet wird)
+db.sqlite3
+
+# Django-Umgebungsvariablen oder Secrets
+*.env
+config.json

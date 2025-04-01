@@ -1,0 +1,7 @@
+from rest_framework import viewsets
+from .models import Highscore
+from .serializers import HighscoreSerializer
+
+class HighscoreViewSet(viewsets.ModelViewSet):
+    queryset = Highscore.objects.all().order_by('-score')
+    serializer_class = HighscoreSerializer
