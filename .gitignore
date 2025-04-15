@@ -12,3 +12,5 @@ db.sqlite3
 # Django-Umgebungsvariablen oder Secrets
 *.env
 config.json
+
+*.idea
