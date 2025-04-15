@@ -1,63 +1,23 @@
-var config = {
-    type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    scene: {
-        preload: preload,
-        create: create,
-        update: update
-    }
+// Global Variables
+var
+  game = new Phaser.Game(800, 600, Phaser.AUTO, 'game'),
+  Main = function () {}
+
+Main.prototype = {
+
+  preload: function () {
+    game.load.image('spacerunner', staticFolder + 'assets/images/spacerunner-screen.png');
+    game.load.image('loading', staticFolder + 'assets/images/loading.png');
+    game.load.script('polyfill', staticFolder + 'lib/polyfill.js');
+    game.load.script('utils', staticFolder + 'lib/utils.js');
+    game.load.script('splash', staticFolder + 'states/Splash.js');
+  },
+
+  create: function () {
+    game.state.add('Splash', Splash);
+    game.state.start('Splash');
+  }
 };
 
-var game = new Phaser.Game(config);
-
-function preload() {
-    this.load.image('sky', 'https://labs.phaser.io/assets/skies/space3.png');
-}
-
-function create() {
-    // this.add.image(400, 300, 'sky');
-    fetch('/api/highscores/')
-        .then(response => response.json())
-        .then(data => {
-            console.log('Highscores:', data);
-
-            // Du kannst sie auch anzeigen lassen:
-            let y = 20;
-            data.forEach((entry, index) => {
-                this.add.text(20, y, `${index + 1}. ${entry.player}: ${entry.score}`, { fontSize: '16px', fill: '#fff' });
-                y += 20;
-            });
-        });
-}
-
-function update() {
-}
-
-function postHighscore(name, score) {
-    fetch('/api/highscores/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-            player: name,
-            score: score
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(errorData => {
-                console.error('Fehler beim Speichern:', errorData);
-            });
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data) console.log('Highscore gespeichert:', data);
-    });
-}
-
-// Testaufruf
-postHighscore("Willi", 1800);
+game.state.add('Main', Main);
+game.state.start('Main');
