@@ -14,3 +14,26 @@ pip install -r .\backend\requirements.txt  # Installiere Abhängigkeiten
 
 python manage.py migrate  # Datenbank einrichten
 python manage.py runserver  # Server starten
+
+
+Ideen:
+
+Ende des Spiels:
+    Zeit abgelaufen?
+    Getroffen?
+        Wie oft getroffen?
+
+Leben des Spielers:
+    Treffer?
+
+Gegner
+    Größe
+    
+    Patternbasiert aber Random Patternaufruf
+        20x5
+    Werden "schnell"
+
+Highscore
+    Abgelaufene Zeit * Faktor X
+    +
+    Getroffene Gegner (mit Multipikator bei "schwereren" Gegnern)
