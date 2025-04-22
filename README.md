@@ -48,8 +48,11 @@ Angreifende Gegner/Tod des Spieler erweiter
 
 Score anpassen/erweitern
 
-Highscore Page erweitern? Zeiträume
+Highscore Page erweitern? Zeiträume auswählen (All Time, dieser tag, letzte woche)
 
-Musik einbauen?
+Musik einbauen? (Sci-Fi, Retro Pixel Space Musik)
 
 Countdown bevor Spielstart?
+
+Name eingeben verbessern (Löschen und Überlänge)
+Submit Button mit onover und onout functions für anzeige
