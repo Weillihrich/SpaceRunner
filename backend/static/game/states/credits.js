@@ -9,16 +9,21 @@ Credits.prototype = {
   addCredit: function(task, author) {
     var authorStyle = { font: '20pt PressStart2', fill: 'white', align: 'center', stroke: 'rgba(0,0,0,0)', strokeThickness: 4};
     var taskStyle = { font: '15pt PressStart2', fill: 'white', align: 'center', stroke: 'rgba(0,0,0,0)', strokeThickness: 4};
+
     var authorText = game.add.text(game.world.centerX, 900, author, authorStyle);
     var taskText = game.add.text(game.world.centerX, 950, task, taskStyle);
+
     authorText.anchor.setTo(0.5);
     authorText.stroke = "rgba(0,0,0,0)";
     authorText.strokeThickness = 4;
+
     taskText.anchor.setTo(0.5);
     taskText.stroke = "rgba(0,0,0,0)";
     taskText.strokeThickness = 4;
+
     game.add.tween(authorText).to( { y: -300 }, 20000, Phaser.Easing.Cubic.Out, true, this.creditCount * 2000);
     game.add.tween(taskText).to( { y: -250 }, 20000, Phaser.Easing.Cubic.Out, true, this.creditCount * 2000);
+
     this.creditCount ++;
   },
 
