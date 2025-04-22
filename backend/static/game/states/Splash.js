@@ -11,6 +11,7 @@ Splash.prototype = {
     game.load.script('gameover', staticFolder + 'states/GameOver.js');
     game.load.script('credits', staticFolder + 'states/Credits.js');
     game.load.script('highscores', staticFolder + 'states/highscores.js');
+    game.load.script('enemyPattern', staticFolder + '/assets/patterns/enemies.js');
   },
 
   loadImages: function () {
