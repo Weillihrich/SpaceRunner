@@ -193,7 +193,7 @@ Game.prototype = {
 
     // Zufällige Chance, dass ein Gegner schießt
     Object.values(bottomEnemies).forEach(enemy => {
-      if (Math.random() < 0.0001) { // 1% Chance pro Frame
+      if (Math.random() < 0.001) { // 1% Chance pro Frame
         this.fireEnemyBullet(enemy);
       }
     });
@@ -239,7 +239,7 @@ Game.prototype = {
     // Stoppe alle Bewegungen und Eingaben
     player.kill();
     game.time.events.add(Phaser.Timer.SECOND * 3, () => {
-      game.state.start('Game'); // Neustart des Spiels
+      game.state.start("GameOver"); // Neustart des Spiels
     });
   }
 };
