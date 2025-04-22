@@ -48,6 +48,8 @@ Angreifende Gegner/Tod des Spieler erweiter
 
 Score anpassen/erweitern
 
-Level Anzahl anzeigen pro Wave
-
 Highscore Page erweitern? Zeiträume
+
+Musik einbauen?
+
+Countdown bevor Spielstart?

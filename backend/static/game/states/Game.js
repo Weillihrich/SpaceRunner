@@ -3,6 +3,9 @@ var Game = function(game) {};
 let scoreText;
 let scorePoints = 0;
 
+let waveText;
+let waveNumber = 0;
+
 var stars;
 var backgroundmove;
 var player;
@@ -20,7 +23,12 @@ Game.prototype = {
 
   addScorePoints: function() {
     var optionStyle = { font: '15pt PressStart2', fill: 'white', align: 'left', stroke: 'rgba(0,0,0,0)', strokeThickness: 4 };
-    scoreText = game.add.text(20, 20, "Score: 0", optionStyle);
+    scoreText = game.add.text(20, 20, "Score: " + scorePoints, optionStyle);
+  },
+
+  addWaveCounter: function() {
+    var optionStyle = { font: '15pt PressStart2', fill: 'white', align: 'right', stroke: 'rgba(0,0,0,0)', strokeThickness: 4 };
+    waveText = game.add.text(650, 20, "Wave: " + waveNumber, optionStyle);
   },
 
   preload: function () {
@@ -33,6 +41,7 @@ Game.prototype = {
     backgroundmove = 2;
 
     this.addScorePoints();
+    this.addWaveCounter();
 
     player = game.add.sprite(game.world.centerX, game.world.centerY + 200, 'rocket');
     game.physics.enable(player, Phaser.Physics.ARCADE);
@@ -83,8 +92,7 @@ Game.prototype = {
   update: function () {
     stars.tilePosition.y += backgroundmove;
 
-    scorePoints = scorePoints + 1;
-    updateScore(scorePoints);
+    updateScore();
 
     player.body.velocity.x = 0;
 
@@ -121,6 +129,7 @@ Game.prototype = {
     // Überprüfen, ob keine Gegner mehr vorhanden sind
     if (enemies.countLiving() === 0 && !this.spawnTimer) {
       this.spawnTimer = game.time.events.add(Phaser.Timer.SECOND * 1, () => {
+        updateWave();
         this.spawnEnemies();
         this.spawnTimer = null; // Timer zurücksetzen
       });
@@ -255,6 +264,12 @@ function fireBullet() {
   }
 }
 
-function updateScore(scorePoints) {
+function updateScore() {
+  scorePoints++;
   scoreText.setText("Score: " + scorePoints);
+}
+
+function updateWave() {
+  waveNumber++;
+  waveText.setText("Wave: " + waveNumber);
 }
