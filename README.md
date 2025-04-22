@@ -50,8 +50,4 @@ Score anpassen/erweitern
 
 Level Anzahl anzeigen pro Wave
 
-Name des Spielers eingeben nach Tod
-
-Score nach Namen Eingabe per API senden
-
 Highscore Page erweitern? Zeiträume
