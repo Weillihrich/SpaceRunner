@@ -20,6 +20,9 @@ GameMenu.prototype = {
     this.addMenuOption('Start', function () {
       game.state.start("Game");
     });
+    this.addMenuOption('Highscores', function () {
+      game.state.start("Highscores");
+    });
     this.addMenuOption('Credits', function () {
       game.state.start("Credits");
     });

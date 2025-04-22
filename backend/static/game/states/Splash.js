@@ -10,6 +10,7 @@ Splash.prototype = {
     game.load.script('game', staticFolder + 'states/Game.js');
     game.load.script('gameover', staticFolder + 'states/GameOver.js');
     game.load.script('credits', staticFolder + 'states/Credits.js');
+    game.load.script('highscores', staticFolder + 'states/highscores.js');
   },
 
   loadImages: function () {
@@ -53,6 +54,7 @@ Splash.prototype = {
     game.state.add("Game", Game);
     game.state.add("GameOver", GameOver);
     game.state.add("Credits", Credits);
+    game.state.add("Highscores", Highscores);
   },
 
   create: function() {

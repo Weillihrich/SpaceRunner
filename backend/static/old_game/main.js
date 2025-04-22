@@ -18,7 +18,7 @@ function preload() {
 //müssen wir kucken wie wir das dann reinbekommen. erstmal das spiel machen wa
 
 function create() {
-    // this.add.image(400, 300, 'sky');
+
     fetch('/api/highscores/')
         .then(response => response.json())
         .then(data => {

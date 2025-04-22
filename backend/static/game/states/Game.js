@@ -14,14 +14,13 @@ var fireButton;
 
 var enemyBullets;
 
+var enemies;
+
 Game.prototype = {
 
   addScorePoints: function() {
-    var optionStyle = { font: '15pt PressStart2', fill: 'white', align: 'left', stroke: 'rgba(0,0,0,0)', strokeThickness: 4};
-    scoreText = game.add.text(400, 10, "Score: 0", optionStyle);
-    scoreText.anchor.setTo(0.5);
-    scoreText.stroke = "rgba(0,0,0,0)";
-    scoreText.strokeThickness = 4;
+    var optionStyle = { font: '15pt PressStart2', fill: 'white', align: 'left', stroke: 'rgba(0,0,0,0)', strokeThickness: 4 };
+    scoreText = game.add.text(20, 20, "Score: 0", optionStyle);
   },
 
   preload: function () {
@@ -30,14 +29,13 @@ Game.prototype = {
   },
 
   create: function () {
-
     stars = game.add.tileSprite(0, 0, 800, 600, 'game-stars');
     backgroundmove = 2;
 
+    this.addScorePoints();
+
     player = game.add.sprite(game.world.centerX, game.world.centerY + 200, 'rocket');
     game.physics.enable(player, Phaser.Physics.ARCADE);
-
-    this.addScorePoints();
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -147,13 +145,8 @@ Game.prototype = {
       return;
     }
 
-    var testPattern = [
-      [0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-      [1, 0, 1, 0, 1, 1, 0, 1, 0, 1],
-    ];
     var randomNumberForPatternChoice = Math.floor(Math.random() * enemyPatterns.length);
     var currentPattern = enemyPatterns[randomNumberForPatternChoice];
-    // var currentPattern = testPattern;
 
     const enemyWidth = 50;
     const enemyHeight = 50;

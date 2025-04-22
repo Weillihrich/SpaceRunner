@@ -3,9 +3,7 @@ var Credits = function(game) {};
 Credits.prototype = {
 
   preload: function () {
-    this.optionCount = 1;
     this.creditCount = 0;
-
   },
 
   addCredit: function(task, author) {
@@ -26,7 +24,7 @@ Credits.prototype = {
 
   addMenuOption: function(text, callback) {
     var optionStyle = { font: '20pt PressStart2', fill: 'white', align: 'left', stroke: 'rgba(0,0,0,0)', strokeThickness: 4};
-    var txt = game.add.text(10, (this.optionCount * 80) + 450, text, optionStyle);
+    var txt = game.add.text(10, 530, text, optionStyle);
 
     txt.stroke = "rgba(0,0,0,0)";
     txt.strokeThickness = 4;
@@ -40,13 +38,11 @@ Credits.prototype = {
       target.stroke = "rgba(0,0,0,0)";
       txt.useHandCursor = false;
     };
-    //txt.useHandCursor = true;
+
     txt.inputEnabled = true;
     txt.events.onInputUp.add(callback, this);
     txt.events.onInputOver.add(onOver, this);
     txt.events.onInputOut.add(onOut, this);
-
-    this.optionCount ++;
   },
 
   create: function () {
@@ -58,7 +54,7 @@ Credits.prototype = {
     this.addCredit('Developer', 'David Göbel');
     this.addCredit('Phaser.io', 'Powered By');
     this.addCredit('for playing', 'Thank you');
-    this.addMenuOption('Back', function (e) {
+    this.addMenuOption('Back', function () {
       game.state.start("GameMenu");
     });
     game.add.tween(bg).to({alpha: 0}, 20000, Phaser.Easing.Cubic.Out, true, 40000);
