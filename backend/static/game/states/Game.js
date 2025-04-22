@@ -79,11 +79,11 @@ Game.prototype = {
 
     player.body.velocity.x = 0;
 
-    if (cursors.left.isDown) {
+    if (cursors.left.isDown || game.input.keyboard.isDown(Phaser.Keyboard.A)) {
       player.body.velocity.x = -200;
     }
 
-    if (cursors.right.isDown) {
+    if (cursors.right.isDown || game.input.keyboard.isDown(Phaser.Keyboard.D)) {
       player.body.velocity.x = 200;
     }
 
