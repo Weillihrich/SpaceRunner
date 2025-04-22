@@ -1,5 +1,8 @@
 var Game = function(game) {};
 
+let scoreText;
+let scorePoints = 0;
+
 var stars;
 var backgroundmove;
 var player;
@@ -10,6 +13,14 @@ var bulletTime = 0;
 var fireButton;
 
 Game.prototype = {
+
+  addScorePoints: function() {
+    var optionStyle = { font: '15pt PressStart2', fill: 'white', align: 'left', stroke: 'rgba(0,0,0,0)', strokeThickness: 4};
+    scoreText = game.add.text(400, 10, "Score: 0", optionStyle);
+    scoreText.anchor.setTo(0.5);
+    scoreText.stroke = "rgba(0,0,0,0)";
+    scoreText.strokeThickness = 4;
+  },
 
   preload: function () {
     this.stage.disableVisibilityChange = false;
@@ -22,7 +33,9 @@ Game.prototype = {
     backgroundmove = 2;
 
     player = game.add.sprite(game.world.centerX, game.world.centerY + 200, 'rocket');
-    game.physics.enable(player,Phaser.Physics.ARCADE);
+    game.physics.enable(player, Phaser.Physics.ARCADE);
+
+    this.addScorePoints();
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -37,7 +50,7 @@ Game.prototype = {
 
     fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-    enemies = game.add.group();	
+    enemies = game.add.group();
     enemies.enableBody = true;
     enemies.physicsBodyType = Phaser.Physics.ARCADE;
     enemies.createMultiple(60, 'enemy');
@@ -60,6 +73,9 @@ Game.prototype = {
 
   update: function () {
     stars.tilePosition.y += backgroundmove;
+
+    scorePoints = scorePoints + 1;
+    updateScore(scorePoints);
 
     player.body.velocity.x = 0;
 
@@ -98,7 +114,7 @@ Game.prototype = {
       console.error("No enemy patterns available.");
       return;
     }
-  
+
     var testPattern = [
       [0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
       [1, 0, 1, 0, 1, 1, 0, 1, 0, 1],
@@ -106,24 +122,24 @@ Game.prototype = {
     var randomNumberForPatternChoice = Math.floor(Math.random() * enemyPatterns.length);
     var currentPattern = enemyPatterns[randomNumberForPatternChoice];
     // var currentPattern = testPattern;
-  
+
     const enemyWidth = 50;
     const enemyHeight = 50;
     const startY = 40;
     const screenWidth = 800;
     const marginX = 45;
-  
+
     for (let row = 0; row < currentPattern.length; row++) {
       const rowPattern = currentPattern[row];
       const slotsInRow = rowPattern.length;
-  
+
       // Berechne die Gesamtbreite aller Slots (inkl. spacing)
       const totalEnemyWidth = slotsInRow * enemyWidth;
       const totalSpacing = screenWidth - 2 * marginX - totalEnemyWidth;
       const spacing = slotsInRow > 1 ? totalSpacing / (slotsInRow - 1) : 0;
-  
+
       let currentX = marginX;
-  
+
       for (let col = 0; col < slotsInRow; col++) {
         if (rowPattern[col] === 1) {
           const enemy = enemies.getFirstExists(false);
@@ -137,7 +153,6 @@ Game.prototype = {
       }
     }
   }
-  
 };
 
 function fireBullet() {
@@ -149,4 +164,8 @@ function fireBullet() {
     bullet.body.velocity.y = -400;
     bulletTime = game.time.now + 20;
   }
+}
+
+function updateScore(scorePoints) {
+  scoreText.setText("Score: " + scorePoints);
 }

@@ -28,7 +28,7 @@ Credits.prototype = {
     var optionStyle = { font: '20pt PressStart2', fill: 'white', align: 'left', stroke: 'rgba(0,0,0,0)', strokeThickness: 4};
     var txt = game.add.text(10, (this.optionCount * 80) + 450, text, optionStyle);
 
-    txt.stroke = "rgba(0,0,0,0";
+    txt.stroke = "rgba(0,0,0,0)";
     txt.strokeThickness = 4;
     var onOver = function (target) {
       target.fill = "#FEFFD5";

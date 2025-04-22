@@ -44,15 +44,14 @@ Splash.prototype = {
     this.loadScripts();
     this.loadImages();
     this.loadFonts();
-
   },
 
   addGameStates: function () {
 
-    game.state.add("GameMenu",GameMenu);
-    game.state.add("Game",Game);
-    game.state.add("GameOver",GameOver);
-    game.state.add("Credits",Credits);
+    game.state.add("GameMenu", GameMenu);
+    game.state.add("Game", Game);
+    game.state.add("GameOver", GameOver);
+    game.state.add("Credits", Credits);
   },
 
   create: function() {
