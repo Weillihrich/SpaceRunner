@@ -78,6 +78,7 @@ GameOver.prototype = {
       const playerName = inputText.text.replace('|', '').trim();
       if (playerName) {
         this.submitScore(playerName, scorePoints);
+        
       }
     });
 
@@ -99,7 +100,11 @@ GameOver.prototype = {
     })
       .then(response => {
         if (response.ok) {
-          this.game.state.start('Highscores'); // Wechsel zur Highscores-Seite
+          console.log('Score submitted successfully');
+          // Wechsel zur Highscores-Seite nach 1 Sekunde
+          game.time.events.add(Phaser.Timer.SECOND * 1, () => {
+            this.game.state.start('Highscores');
+          });
         } else {
           console.error('Failed to submit score');
         }
