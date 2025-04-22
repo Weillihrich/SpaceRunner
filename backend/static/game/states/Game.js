@@ -70,7 +70,7 @@ function fireBullet() {
     bullet = bullets.getFirstExists(false);
   }
   if (bullet) {
-    bullet.reset(player.x + 17, player.y);
+    bullet.reset(player.x + 25, player.y);
     bullet.body.velocity.y = -400;
     bulletTime = game.time.now + 200;
   }
