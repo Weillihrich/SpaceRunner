@@ -48,10 +48,11 @@ const showHighscores = async () => {
     const response = await fetch("/api/highscores/");
     const highscoreJson = await response.json();
 
+    let highscoreStyle = { font: '20pt PressStart2', fill: 'white', align: 'right', stroke: 'rgba(0,0,0,0)', strokeThickness: 4 }
+
     let y = 180;
     highscoreJson.forEach((entry, index) => {
-        var highscoreStyle = { font: '20pt PressStart2', fill: 'white', align: 'right', stroke: 'rgba(0,0,0,0)', strokeThickness: 4 }
-        scores = game.add.text(game.world.centerX , y, `${index + 1}. ${entry.player}: ${entry.score}`, highscoreStyle);
+        let scores = game.add.text(game.world.centerX , y, `${index + 1}. ${entry.player}: ${entry.score}`, highscoreStyle);
         scores.anchor.setTo(0.5);
         scores.stroke = "rgba(0,0,0,0)";
         scores.strokeThickness = 4;

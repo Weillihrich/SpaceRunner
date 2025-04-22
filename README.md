@@ -44,9 +44,11 @@ ToDo:
 
 Pausemenü hinzufügen (ESC-Taste)
 
-Angreifende Gegner/Tod des Spieler
+Angreifende Gegner/Tod des Spieler erweiter
 
 Score anpassen/erweitern
+
+Level Anzahl anzeigen pro Wave
 
 Name des Spielers eingeben nach Tod
 

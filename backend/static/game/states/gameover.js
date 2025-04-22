@@ -30,7 +30,6 @@ GameOver.prototype = {
 
     this.optionCount ++;
 
-
   },
 
   create: function () {
