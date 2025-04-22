@@ -18,6 +18,7 @@ Splash.prototype = {
     game.load.image('rocket', staticFolder + 'assets/images/rocket.png');
     game.load.image('bullet', staticFolder + 'assets/images/bullet.png');
     game.load.image('enemy', staticFolder + 'assets/images/enemy.png');
+    game.load.image('enemyBullet', staticFolder + 'assets/images/enemy-bullet.png');
   },
 
   loadFonts: function () {

@@ -12,6 +12,8 @@ var bullets;
 var bulletTime = 0;
 var fireButton;
 
+var enemyBullets;
+
 Game.prototype = {
 
   addScorePoints: function() {
@@ -55,6 +57,15 @@ Game.prototype = {
     enemies.physicsBodyType = Phaser.Physics.ARCADE;
     enemies.createMultiple(60, 'enemy');
 
+    enemyBullets = game.add.group();
+    enemyBullets.enableBody = true;
+    enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
+    enemyBullets.createMultiple(30, 'enemyBullet');
+    enemyBullets.setAll('anchor.x', 0.5);
+    enemyBullets.setAll('anchor.y', 0.5);
+    enemyBullets.setAll('outOfBoundsKill', true);
+    enemyBullets.setAll('checkWorldBounds', true);
+
     // Debug-Ausgabe, um sicherzustellen, dass enemyPatterns verfügbar ist
     if (typeof enemyPatterns === 'undefined') {
       console.error("enemyPatterns is not defined. Make sure enemies.js is loaded.");
@@ -87,12 +98,27 @@ Game.prototype = {
       player.body.velocity.x = 200;
     }
 
+    // Begrenze die Bewegung der Rakete innerhalb der Grenzen
+    const leftBoundary = 45;
+    const rightBoundary = game.world.width - 45 - player.width;
+
+    if (player.x < leftBoundary) {
+      player.x = leftBoundary;
+    }
+
+    if (player.x > rightBoundary) {
+      player.x = rightBoundary;
+    }
+
     if (fireButton.isDown) {
       fireBullet();
     }
 
     // Kollisionserkennung zwischen Bullets und Gegnern
     game.physics.arcade.overlap(bullets, enemies, this.bulletHitsEnemy, null, this);
+
+    // Kollisionserkennung zwischen enemyBullets und der Rakete
+    game.physics.arcade.overlap(enemyBullets, player, this.playerHit, null, this);
 
     // Überprüfen, ob keine Gegner mehr vorhanden sind
     if (enemies.countLiving() === 0 && !this.spawnTimer) {
@@ -101,6 +127,12 @@ Game.prototype = {
         this.spawnTimer = null; // Timer zurücksetzen
       });
     }
+
+    // Zufällige Gegner schießen lassen
+    this.enemyFire();
+
+    // Überprüfen, ob ein Gegner die Tiefe von 150 Pixel vom unteren Rand erreicht hat
+    this.checkEnemyDepth();
   },
 
   bulletHitsEnemy: function (bullet, enemy) {
@@ -145,13 +177,77 @@ Game.prototype = {
           const enemy = enemies.getFirstExists(false);
           if (enemy) {
             enemy.reset(currentX, startY + row * (enemyHeight + 10));
-            enemy.body.velocity.y = 5;
+            enemy.body.velocity.y = 20;
           }
         }
         // X-Position wird immer aktualisiert – egal ob 0 oder 1
         currentX += enemyWidth + spacing;
       }
     }
+  },
+
+  enemyFire: function () {
+    // Finde die unterste Reihe der Gegner
+    const livingEnemies = enemies.children.filter(enemy => enemy.alive);
+    const bottomEnemies = {};
+
+    livingEnemies.forEach(enemy => {
+      const x = enemy.x.toFixed(0); // Gruppiere Gegner nach ihrer X-Position
+      if (!bottomEnemies[x] || bottomEnemies[x].y < enemy.y) {
+        bottomEnemies[x] = enemy; // Speichere den untersten Gegner an dieser X-Position
+      }
+    });
+
+    // Zufällige Chance, dass ein Gegner schießt
+    Object.values(bottomEnemies).forEach(enemy => {
+      if (Math.random() < 0.0001) { // 1% Chance pro Frame
+        this.fireEnemyBullet(enemy);
+      }
+    });
+  },
+
+  fireEnemyBullet: function (enemy) {
+    const enemyBullet = enemyBullets.getFirstExists(false);
+    if (enemyBullet) {
+      enemyBullet.reset(enemy.x + enemy.width / 2, enemy.y + enemy.height);
+      enemyBullet.body.velocity.y = 200; // Gegner-Bullet nach unten bewegen
+    }
+  },
+
+  checkEnemyDepth: function () {
+    const depthLimit = game.world.height - 100; // 150 Pixel vom unteren Rand
+    const livingEnemies = enemies.children.filter(enemy => enemy.alive);
+
+    for (let enemy of livingEnemies) {
+      if (enemy.y + enemy.height >= depthLimit) {
+        this.endGame(); // Spiel beenden, wenn ein Gegner die Tiefe erreicht
+        break;
+      }
+    }
+  },
+
+  playerHit: function (player, enemyBullet) {
+    // Gegner-Bullet ausblenden
+    enemyBullet.kill();
+
+    // Spiel beenden
+    this.endGame();
+  },
+
+  endGame: function () {
+    // Zeige eine Nachricht und starte das Spiel neu
+    const gameOverText = game.add.text(game.world.centerX, game.world.centerY, 'Game Over', {
+      font: '30px PressStart2P',
+      fill: '#fff',
+      align: 'center',
+    });
+    gameOverText.anchor.setTo(0.5);
+
+    // Stoppe alle Bewegungen und Eingaben
+    player.kill();
+    game.time.events.add(Phaser.Timer.SECOND * 3, () => {
+      game.state.start('Game'); // Neustart des Spiels
+    });
   }
 };
 
