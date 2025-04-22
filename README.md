@@ -37,3 +37,21 @@ Highscore
     Abgelaufene Zeit * Faktor X
     +
     Getroffene Gegner (mit Multipikator bei "schwereren" Gegnern)
+
+
+
+ToDo:
+
+Pausemenü hinzufügen (ESC-Taste)
+
+Angreifende Gegner/Tod des Spieler
+
+Spieler OutOfBounds (Check position Spieler x kleiner als ? oder größer als ?)
+
+Score anpassen/erweitern
+
+Name des Spielers eingeben nach Tod
+
+Score nach Namen Eingabe per API senden
+
+Highscore Page erstellen
