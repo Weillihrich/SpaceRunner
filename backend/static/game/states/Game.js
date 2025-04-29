@@ -37,6 +37,13 @@ Game.prototype = {
   },
 
   create: function () {
+    try {
+      musicPlayer.stop();
+    } catch (error) {}
+    musicPlayer = game.add.audio('gameNormal');
+    musicPlayer.loop = true;
+    musicPlayer.play();
+
     stars = game.add.tileSprite(0, 0, 800, 600, 'game-stars');
     backgroundmove = 2;
 
@@ -92,7 +99,7 @@ Game.prototype = {
   update: function () {
     stars.tilePosition.y += backgroundmove;
 
-    updateScore();
+    updateScore(1);
 
     player.body.velocity.x = 0;
 
@@ -130,6 +137,7 @@ Game.prototype = {
     if (enemies.countLiving() === 0 && !this.spawnTimer) {
       this.spawnTimer = game.time.events.add(Phaser.Timer.SECOND * 1, () => {
         updateWave();
+        updateScore(10000);
         this.spawnEnemies();
         this.spawnTimer = null; // Timer zurücksetzen
       });
@@ -146,6 +154,7 @@ Game.prototype = {
     // Bullet und Gegner ausblenden
     bullet.kill();
     enemy.kill();
+    updateScore(200);
   },
 
   spawnEnemies: function () {
@@ -264,8 +273,8 @@ function fireBullet() {
   }
 }
 
-function updateScore() {
-  scorePoints++;
+function updateScore(toAddPoints) {
+  scorePoints += toAddPoints;
   scoreText.setText("Score: " + scorePoints);
 }
 
