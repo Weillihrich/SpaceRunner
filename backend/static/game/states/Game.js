@@ -73,6 +73,11 @@ Game.prototype = {
     enemyBullets.setAll('outOfBoundsKill', true);
     enemyBullets.setAll('checkWorldBounds', true);
 
+    bossEnemys = game.add.group();
+    bossEnemys.enableBody = true;
+    bossEnemys.physicsBodyType = Phaser.Physics.ARCADE;
+    bossEnemys.createMultiple(1, 'boss');
+
     // Debug-Ausgabe, um sicherzustellen, dass enemyPatterns verfügbar ist
     if (typeof enemyPatterns === 'undefined') {
       console.error("enemyPatterns is not defined. Make sure enemies.js is loaded.");
@@ -130,7 +135,13 @@ Game.prototype = {
     if (enemies.countLiving() === 0 && !this.spawnTimer) {
       this.spawnTimer = game.time.events.add(Phaser.Timer.SECOND * 1, () => {
         updateWave();
-        this.spawnEnemies();
+        if (waveNumber % 1 === 0) {
+          this.spawnBoss(); // Boss spawnen
+        }
+        else{
+          this.spawnEnemies();
+        }
+        
         this.spawnTimer = null; // Timer zurücksetzen
       });
     }
@@ -146,6 +157,14 @@ Game.prototype = {
     // Bullet und Gegner ausblenden
     bullet.kill();
     enemy.kill();
+  },
+
+  spawnBoss: function () {
+    const bossEnemy = bossEnemys.getFirstExists(false);
+    if (bossEnemy) {
+      bossEnemy.reset(game.world.centerX, 0); // Boss erscheint oben in der Mitte
+      bossEnemy.body.velocity.y = 50; // Boss bewegt sich nach unten
+    }
   },
 
   spawnEnemies: function () {
@@ -202,7 +221,7 @@ Game.prototype = {
 
     // Zufällige Chance, dass ein Gegner schießt
     Object.values(bottomEnemies).forEach(enemy => {
-      if (Math.random() < 0.001) { // 1% Chance pro Frame
+      if (Math.random() < 0.000001) { // 1% Chance pro Frame
         this.fireEnemyBullet(enemy);
       }
     });
