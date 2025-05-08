@@ -6,6 +6,10 @@ let scorePoints = 0;
 let waveText;
 let waveNumber = 0;
 
+// Neue Variablen für Boss-Lebensleiste
+let bossHealth = 0;
+let bossHealthBar;
+
 var stars;
 var backgroundmove;
 var player;
@@ -128,6 +132,9 @@ Game.prototype = {
     // Kollisionserkennung zwischen Bullets und Gegnern
     game.physics.arcade.overlap(bullets, enemies, this.bulletHitsEnemy, null, this);
 
+    // Kollisionserkennung zwischen Bullets und dem Boss
+    game.physics.arcade.overlap(bullets, bossEnemys, this.bulletHitsEnemy, null, this);
+
     // Kollisionserkennung zwischen enemyBullets und der Rakete
     game.physics.arcade.overlap(enemyBullets, player, this.playerHit, null, this);
 
@@ -137,11 +144,10 @@ Game.prototype = {
         updateWave();
         if (waveNumber % 1 === 0) {
           this.spawnBoss(); // Boss spawnen
-        }
-        else{
+        } else {
           this.spawnEnemies();
         }
-        
+
         this.spawnTimer = null; // Timer zurücksetzen
       });
     }
@@ -154,16 +160,47 @@ Game.prototype = {
   },
 
   bulletHitsEnemy: function (bullet, enemy) {
-    // Bullet und Gegner ausblenden
-    bullet.kill();
-    enemy.kill();
+    bullet.kill(); // Bullet entfernen
+
+    if (enemy.key === 'boss') {
+      // Wenn der Boss getroffen wird
+      bossHealth -= 10; // Reduziere die Lebenspunkte
+      this.updateBossHealthBar(); // Aktualisiere die Lebensleiste
+
+      if (bossHealth <= 0) {
+        enemy.kill(); // Entferne den Boss, wenn die Lebenspunkte 0 erreichen
+        bossHealthBar.clear(); // Entferne die Lebensleiste
+      }
+    } else {
+      // Normale Gegner
+      enemy.kill();
+    }
   },
 
   spawnBoss: function () {
     const bossEnemy = bossEnemys.getFirstExists(false);
     if (bossEnemy) {
-      bossEnemy.reset(game.world.centerX, 0); // Boss erscheint oben in der Mitte
-      bossEnemy.body.velocity.y = 50; // Boss bewegt sich nach unten
+      bossEnemy.reset(game.world.centerX - 25, 75); // Boss erscheint oben in der Mitte
+      bossHealth = 100; // Setze die Lebenspunkte des Bosses
+
+      // Erstelle die Lebensleiste
+      if (!bossHealthBar) {
+        bossHealthBar = game.add.graphics();
+      }
+      this.updateBossHealthBar();
+    }
+  },
+
+  updateBossHealthBar: function () {
+    if (bossHealthBar) {
+      bossHealthBar.clear();
+      bossHealthBar.beginFill(0xffffff); // Rote Farbe für die Lebensleiste
+      const barWidth = 200; // Breite der Lebensleiste
+      const barHeight = 20; // Höhe der Lebensleiste
+      const x = game.world.centerX - barWidth / 2; // Zentriert
+      const y = 20; 
+      bossHealthBar.drawRect(x, y, (bossHealth / 100) * barWidth, barHeight);
+      bossHealthBar.endFill();
     }
   },
 
