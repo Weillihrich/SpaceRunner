@@ -32,6 +32,13 @@ GameOver.prototype = {
   },
 
   create: function () {
+    try {
+      musicPlayer.stop();
+    } catch (error) {}
+    musicPlayer = game.add.audio('gameOver');
+    musicPlayer.loop = true;
+    musicPlayer.play();
+
     game.add.sprite(0, 0, 'stars');
     var titleStyle = { font: 'bold 60pt PressStart2', fill: '#FDFFB5', align: 'center'};
     var text = game.add.text(game.world.centerX, 100, "Game Over", titleStyle);

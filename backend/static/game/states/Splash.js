@@ -14,6 +14,13 @@ Splash.prototype = {
     game.load.script('enemyPattern', staticFolder + '/assets/patterns/enemies.js');
   },
 
+  loadBgm: function () {
+    game.load.audio('mainMenu', staticFolder + 'assets/music/mainMenu.mp3');
+    game.load.audio('gameNormal', staticFolder + 'assets/music/gameNormal.mp3');
+    game.load.audio('gameBoss', staticFolder + 'assets/music/gameBoss.mp3');
+    game.load.audio('gameOver', staticFolder + 'assets/music/gameOver.mp3');
+  },
+
   loadImages: function () {
     game.load.image('stars', staticFolder + 'assets/images/stars.png');
     game.load.image('game-stars', staticFolder + 'assets/images/game-stars.png');
@@ -45,6 +52,7 @@ Splash.prototype = {
     this.load.setPreloadSprite(this.loadingBar);
 
     this.loadScripts();
+    this.loadBgm();
     this.loadImages();
     this.loadFonts();
   },
@@ -64,6 +72,6 @@ Splash.prototype = {
 
     setTimeout(function () {
       game.state.start("GameMenu");
-    }, 1500);
+    }, 1000);
   }
 };
