@@ -44,15 +44,13 @@ ToDo:
 
 Pausemenü hinzufügen (ESC-Taste)
 
-Angreifende Gegner/Tod des Spieler erweiter
-
-Score anpassen/erweitern
+Angreifende Gegner/Tod des Spieler erweitern
 
 Highscore Page erweitern? Zeiträume auswählen (All Time, dieser tag, letzte woche)
-
-Musik einbauen? (Sci-Fi, Retro Pixel Space Musik)
 
 Countdown bevor Spielstart?
 
 Name eingeben verbessern (Löschen und Überlänge)
 Submit Button mit onover und onout functions für anzeige
+
+neue seite für startscreen (Userinteraktion damit wir im menu musik spielen können)
