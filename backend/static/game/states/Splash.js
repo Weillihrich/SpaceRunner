@@ -3,9 +3,9 @@ var Splash = function () {};
 Splash.prototype = {
 
   loadScripts: function () {
-    game.load.script('style', staticFolder + 'lib/style.js');
+    //game.load.script('style', staticFolder + 'lib/style.js');
     game.load.script('mixins', staticFolder + 'lib/mixins.js');
-    game.load.script('WebFont', staticFolder + 'vendor/webfontloader.js');
+    //game.load.script('WebFont', staticFolder + 'vendor/webfontloader.js');
     game.load.script('gamemenu', staticFolder + 'states/GameMenu.js');
     game.load.script('game', staticFolder + 'states/Game.js');
     game.load.script('gameover', staticFolder + 'states/GameOver.js');
@@ -54,11 +54,10 @@ Splash.prototype = {
     this.loadScripts();
     this.loadBgm();
     this.loadImages();
-    this.loadFonts();
+    //this.loadFonts();
   },
 
   addGameStates: function () {
-
     game.state.add("GameMenu", GameMenu);
     game.state.add("Game", Game);
     game.state.add("GameOver", GameOver);
