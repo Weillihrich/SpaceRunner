@@ -36,9 +36,11 @@ Main.prototype = {
 
   addStartButton: function () {
     var titleStyle = { font: '40pt PressStart2', fill: '#FFFFFF', align: 'center'};
-    var text = game.add.text(game.world.centerX, 300, "START", titleStyle);
+    var text = game.add.text(game.world.centerX, 350, "START", titleStyle);
     text.setShadow(3, 3, 'rgba(0, 0, 0, 0.5)', 5);
     text.anchor.set(0.5);
+    text.stroke = "rgba(0,0,0,0)";
+    text.strokeThickness = 4;
 
     var onOver = function (target) {
       target.fill = "#FEFFD5";
@@ -59,13 +61,13 @@ Main.prototype = {
     let shown = true;
     function fadeLoop() {
       if (shown) {
-        let tween = game.add.tween(text).to({ alpha: 0 }, 1500, Phaser.Easing.Linear.None, true);
+        let tween = game.add.tween(text).to({ alpha: 0.2 }, 1000, Phaser.Easing.Linear.None, true);
         tween.onComplete.addOnce(() => {
           shown = false;
           fadeLoop();
         });
       } else {
-        let tween = game.add.tween(text).to({ alpha: 1 }, 1500, Phaser.Easing.Linear.None, true);
+        let tween = game.add.tween(text).to({ alpha: 1 }, 1000, Phaser.Easing.Linear.None, true);
         tween.onComplete.addOnce(() => {
           shown = true;
           fadeLoop();

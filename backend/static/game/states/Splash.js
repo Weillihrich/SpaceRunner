@@ -3,15 +3,13 @@ var Splash = function () {};
 Splash.prototype = {
 
   loadScripts: function () {
-    //game.load.script('style', staticFolder + 'lib/style.js');
     game.load.script('mixins', staticFolder + 'lib/mixins.js');
-    //game.load.script('WebFont', staticFolder + 'vendor/webfontloader.js');
     game.load.script('gamemenu', staticFolder + 'states/GameMenu.js');
     game.load.script('game', staticFolder + 'states/Game.js');
     game.load.script('gameover', staticFolder + 'states/GameOver.js');
     game.load.script('credits', staticFolder + 'states/Credits.js');
     game.load.script('highscores', staticFolder + 'states/highscores.js');
-    game.load.script('enemyPattern', staticFolder + '/assets/patterns/enemies.js');
+    game.load.script('enemyPattern', staticFolder + 'assets/patterns/enemies.js');
   },
 
   loadBgm: function () {
@@ -30,15 +28,6 @@ Splash.prototype = {
     game.load.image('enemyBullet', staticFolder + 'assets/images/enemy-bullet.png');
   },
 
-  loadFonts: function () {
-    WebFontConfig = {
-      custom: {
-        families: ['PressStart2'],
-        urls: [staticFolder + 'assets/style/pressstart2.css']
-      }
-    }
-  },
-
   init: function () {
     this.loadingBar = game.make.sprite(game.world.centerX-(387/2), 400, "loading");
     this.status     = game.make.text(game.world.centerX, 380, 'Loading...', {fill: 'white'});
@@ -54,7 +43,6 @@ Splash.prototype = {
     this.loadScripts();
     this.loadBgm();
     this.loadImages();
-    //this.loadFonts();
   },
 
   addGameStates: function () {

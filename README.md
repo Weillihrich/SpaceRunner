@@ -45,6 +45,7 @@ ToDo:
 Pausemenü hinzufügen (ESC-Taste)
 
 Angreifende Gegner/Tod des Spieler erweitern
+Boss-Wave - +100.000 Score ?  
 
 Highscore Page erweitern? Zeiträume auswählen (All Time, dieser tag, letzte woche)
 
@@ -53,4 +54,4 @@ Countdown bevor Spielstart?
 Name eingeben verbessern (Löschen und Überlänge)
 Submit Button mit onover und onout functions für anzeige
 
-neue seite für startscreen (Userinteraktion damit wir im menu musik spielen können)
+Soundeffekt bei bullet schuss (NCS)
