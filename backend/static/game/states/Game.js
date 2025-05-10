@@ -62,6 +62,9 @@ Game.prototype = {
 
     scorePoints = 0;
     waveNumber = 0;
+    if (isPaused) {
+      this.resumeGame();
+    }
 
     this.addScorePoints();
     this.addWaveCounter();
