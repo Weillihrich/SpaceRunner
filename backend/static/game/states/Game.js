@@ -226,7 +226,6 @@ Game.prototype = {
     }
     // Bullet und Gegner ausblenden
     bullet.kill();
-    enemy.kill();
     updateScore(200);
   },
 
