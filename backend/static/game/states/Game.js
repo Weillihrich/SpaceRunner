@@ -57,6 +57,8 @@ Game.prototype = {
     stars = game.add.tileSprite(0, 0, 800, 600, 'game-stars');
     backgroundmove = 2;
 
+    scorePoints = 0;
+
     this.addScorePoints();
     this.addWaveCounter();
 
