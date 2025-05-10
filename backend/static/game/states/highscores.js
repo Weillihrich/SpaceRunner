@@ -14,12 +14,12 @@ Highscores.prototype = {
         txt.strokeThickness = 4;
         var onOver = function (target) {
             target.fill = "#FEFFD5";
-            target.stroke = "rgba(200,200,200,0.5)";
+            target.stroke = "rgba(200, 200, 200, 0.5)";
             txt.useHandCursor = true;
         };
         var onOut = function (target) {
             target.fill = "white";
-            target.stroke = "rgba(0,0,0,0)";
+            target.stroke = "rgba(0, 0, 0, 0)";
             txt.useHandCursor = false;
         };
 
@@ -33,7 +33,7 @@ Highscores.prototype = {
         game.add.sprite(0, 0, 'stars');
         var titleStyle = { font: 'bold 50pt PressStart2', fill: '#FDFFB5', align: 'center'};
         var text = game.add.text(game.world.centerX, 100, "Highscores", titleStyle);
-        text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
+        text.setShadow(3, 3, 'rgba(0, 0, 0, 0.5)', 5);
         text.anchor.set(0.5);
 
         this.addMenuOption('Back', function () {

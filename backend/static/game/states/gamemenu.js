@@ -13,9 +13,15 @@ GameMenu.prototype = {
   },
 
   create: function () {
-
     game.stage.disableVisibilityChange = true;
     game.add.sprite(0, 0, 'spacerunner');
+
+    try {
+      musicPlayer.stop();
+    } catch (error) {}
+    musicPlayer = game.add.audio('mainMenu');
+    musicPlayer.loop = true;
+    musicPlayer.play();
 
     this.addMenuOption('Start', function () {
       game.state.start("Game");

@@ -3,15 +3,20 @@ var Splash = function () {};
 Splash.prototype = {
 
   loadScripts: function () {
-    game.load.script('style', staticFolder + 'lib/style.js');
     game.load.script('mixins', staticFolder + 'lib/mixins.js');
-    game.load.script('WebFont', staticFolder + 'vendor/webfontloader.js');
     game.load.script('gamemenu', staticFolder + 'states/GameMenu.js');
     game.load.script('game', staticFolder + 'states/Game.js');
     game.load.script('gameover', staticFolder + 'states/GameOver.js');
     game.load.script('credits', staticFolder + 'states/Credits.js');
     game.load.script('highscores', staticFolder + 'states/highscores.js');
-    game.load.script('enemyPattern', staticFolder + '/assets/patterns/enemies.js');
+    game.load.script('enemyPattern', staticFolder + 'assets/patterns/enemies.js');
+  },
+
+  loadBgm: function () {
+    game.load.audio('mainMenu', staticFolder + 'assets/music/mainMenu.mp3');
+    game.load.audio('gameNormal', staticFolder + 'assets/music/gameNormal.mp3');
+    game.load.audio('gameBoss', staticFolder + 'assets/music/gameBoss.mp3');
+    game.load.audio('gameOver', staticFolder + 'assets/music/gameOver.mp3');
   },
 
   loadImages: function () {
@@ -22,15 +27,6 @@ Splash.prototype = {
     game.load.image('enemy', staticFolder + 'assets/images/enemy.png');
     game.load.image('enemyBullet', staticFolder + 'assets/images/enemy-bullet.png');
     game.load.image('boss', staticFolder + 'assets/images/boss.png');
-  },
-
-  loadFonts: function () {
-    WebFontConfig = {
-      custom: {
-        families: ['PressStart2'],
-        urls: [staticFolder + 'assets/style/pressstart2.css']
-      }
-    }
   },
 
   init: function () {
@@ -46,12 +42,11 @@ Splash.prototype = {
     this.load.setPreloadSprite(this.loadingBar);
 
     this.loadScripts();
+    this.loadBgm();
     this.loadImages();
-    this.loadFonts();
   },
 
   addGameStates: function () {
-
     game.state.add("GameMenu", GameMenu);
     game.state.add("Game", Game);
     game.state.add("GameOver", GameOver);
@@ -65,6 +60,6 @@ Splash.prototype = {
 
     setTimeout(function () {
       game.state.start("GameMenu");
-    }, 1500);
+    }, 1000);
   }
 };
