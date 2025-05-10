@@ -15,6 +15,9 @@ let bossHealthBarBorder;
 let bossDirection = 1; // 1 = nach rechts, -1 = nach links
 let bossSpeed = 100; // Geschwindigkeit des Bosses
 
+let isPaused = false;
+let pauseGroup = null;
+
 var stars;
 var backgroundmove;
 var player;
@@ -58,6 +61,7 @@ Game.prototype = {
     backgroundmove = 2;
 
     scorePoints = 0;
+    waveNumber = 0;
 
     this.addScorePoints();
     this.addWaveCounter();
@@ -89,6 +93,9 @@ Game.prototype = {
       console.log("enemyPatterns loaded successfully:", enemyPatterns);
     }
 
+    // ESC für Pause
+    game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(this.togglePause, this);
+
     // Starte die Gegnerdarstellung nach 3 Sekunden
     // game.time.events.add(Phaser.Timer.SECOND * 3, this.spawnEnemies, this);
 
@@ -99,6 +106,8 @@ Game.prototype = {
   },
 
   update: function () {
+    if (isPaused) return; // Keine Updates im Pausenmodus
+
     stars.tilePosition.y += backgroundmove;
 
     updateScore(1);
@@ -151,7 +160,7 @@ Game.prototype = {
       this.spawnTimer = game.time.events.add(Phaser.Timer.SECOND * 1, () => {
         updateWave();
         updateScore(10000);
-        if (waveNumber % 5 === 0) {
+        if (waveNumber % 1 === 0) {
           this.spawnBoss(); // Boss spawnen
         } else {
           this.spawnEnemies();
@@ -167,6 +176,109 @@ Game.prototype = {
 
     // Überprüfen, ob ein Gegner die Tiefe von 150 Pixel vom unteren Rand erreicht hat
     this.checkEnemyDepth();
+  },
+
+  togglePause: function () {
+    if (isPaused) {
+      this.resumeGame();
+    } else {
+      this.pauseGame();
+    }
+  },
+
+  pauseGame: function () {
+    if (isPaused) return;
+    isPaused = true;
+
+    // Gruppe für Pause-UI
+    pauseGroup = game.add.group();
+
+    // Halbtransparentes Overlay
+    let overlay = game.add.graphics(0, 0, pauseGroup);
+    overlay.beginFill(0x000000, 0.7);
+    overlay.drawRect(0, 0, game.world.width, game.world.height);
+    overlay.endFill();
+
+    // "Pause"-Text
+    let pauseText = game.add.text(game.world.centerX, 200, "Pause", {
+      font: 'bold 60pt PressStart2',
+      fill: '#FDFFB5',
+      align: 'center'
+    }, pauseGroup);
+    pauseText.anchor.set(0.5);
+
+    // Weiter-Button
+    let resumeBtn = game.add.text(game.world.centerX, 350, "Weiter", {
+      font: '30pt PressStart2',
+      fill: 'white',
+      align: 'center'
+    }, pauseGroup);
+    resumeBtn.anchor.set(0.5);
+    resumeBtn.inputEnabled = true;
+    resumeBtn.events.onInputUp.add(this.resumeGame, this);
+
+    // Einstellungen-Button
+    let settingsBtn = game.add.text(game.world.centerX, 450, "Einstellungen", {
+      font: '30pt PressStart2',
+      fill: 'white',
+      align: 'center'
+    }, pauseGroup);
+    settingsBtn.anchor.set(0.5);
+    settingsBtn.inputEnabled = true;
+    settingsBtn.events.onInputUp.add(function () {
+      // Speichere den kompletten Spielzustand
+      game.state.states.Game._savedState = {
+        score: scorePoints,
+        wave: waveNumber,
+        isPaused: isPaused,
+        player: {
+          x: player.x,
+          y: player.y
+        },
+        enemies: enemies.children
+          .filter(enemy => enemy.alive)
+          .map(enemy => ({
+            x: enemy.x,
+            y: enemy.y,
+            velocity: enemy.body.velocity
+          })),
+        boss: bossEnemys.getFirstAlive() ? {
+          x: bossEnemys.getFirstAlive().x,
+          y: bossEnemys.getFirstAlive().y,
+          health: bossHealth,
+          direction: bossDirection
+        } : null,
+        // Speichere aktive Player Bullets
+        playerBullets: bullets.children
+          .filter(bullet => bullet.alive)
+          .map(bullet => ({
+            x: bullet.x,
+            y: bullet.y,
+            velocity: bullet.body.velocity
+          })),
+        // Speichere aktive Enemy Bullets
+        enemyBullets: enemyBullets.children
+          .filter(bullet => bullet.alive)
+          .map(bullet => ({
+            x: bullet.x,
+            y: bullet.y,
+            velocity: bullet.body.velocity
+          }))
+      };
+      game.state.start("Settings", false, false);
+    });
+
+    game.physics.arcade.isPaused = true;
+  },
+
+  resumeGame: function () {
+    if (!isPaused) return;
+    isPaused = false;
+    if (pauseGroup) {
+      pauseGroup.destroy();
+      pauseGroup = null;
+    }
+    game.physics.arcade.isPaused = false;
   },
 
   bulletHitsEnemy: function (bullet, enemy) {
