@@ -42,8 +42,6 @@ Highscore
 
 ToDo:
 
-Pausemenü hinzufügen (ESC-Taste)
-
 Angreifende Gegner/Tod des Spieler erweitern
 Boss-Wave - +100.000 Score ?  
 
@@ -55,3 +53,8 @@ Name eingeben verbessern (Löschen und Überlänge)
 Submit Button mit onover und onout functions für anzeige
 
 Soundeffekt bei bullet schuss (NCS)
+
+Hoch runter movement(w,s,up,down)
+
+Spielerleben 3 Hits pro run
+Vielleicht lebens als Belohnung für Bosslevel
