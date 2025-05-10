@@ -37,6 +37,7 @@ GameOver.prototype = {
     } catch (error) {}
     musicPlayer = game.add.audio('gameOver');
     musicPlayer.loop = true;
+    musicPlayer.volume = typeof gameVolume !== "undefined" ? gameVolume : 0.5;
     musicPlayer.play();
 
     game.add.sprite(0, 0, 'stars');

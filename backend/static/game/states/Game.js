@@ -51,6 +51,7 @@ Game.prototype = {
     } catch (error) {}
     musicPlayer = game.add.audio('gameNormal');
     musicPlayer.loop = true;
+    musicPlayer.volume = typeof gameVolume !== "undefined" ? gameVolume : 0.5;
     musicPlayer.play();
 
     stars = game.add.tileSprite(0, 0, 800, 600, 'game-stars');
@@ -64,14 +65,8 @@ Game.prototype = {
 
     cursors = game.input.keyboard.createCursorKeys();
 
-    bullets = game.add.group();
-    bullets.enableBody = true;
-    bullets.physicsBodyType = Phaser.Physics.ARCADE;
-    bullets.createMultiple(30, 'bullet');
-    bullets.setAll('anchor.x', 0.5);
-    bullets.setAll('anchor.y', 1);
-    bullets.setAll('outOfBoundsKill', true);
-    bullets.setAll('checkWorldBounds', true);
+    bullets = PlayerBullet.createGroup(game);
+    enemyBullets = EnemyBullet.createGroup(game);
 
     fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
@@ -79,15 +74,6 @@ Game.prototype = {
     enemies.enableBody = true;
     enemies.physicsBodyType = Phaser.Physics.ARCADE;
     enemies.createMultiple(60, 'enemy');
-
-    enemyBullets = game.add.group();
-    enemyBullets.enableBody = true;
-    enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
-    enemyBullets.createMultiple(30, 'enemyBullet');
-    enemyBullets.setAll('anchor.x', 0.5);
-    enemyBullets.setAll('anchor.y', 0.5);
-    enemyBullets.setAll('outOfBoundsKill', true);
-    enemyBullets.setAll('checkWorldBounds', true);
 
     bossEnemys = game.add.group();
     bossEnemys.enableBody = true;
@@ -138,7 +124,7 @@ Game.prototype = {
     }
 
     if (fireButton.isDown) {
-      fireBullet();
+      this.fireBullet();
     }
 
     // Kollisionserkennung zwischen Bullets und Gegnern
@@ -224,8 +210,6 @@ Game.prototype = {
       bossHealthBar.drawRect(x, y, (bossHealth / 100) * barWidth, barHeight);
       bossHealthBar.endFill();
     }
-    // Bullet und Gegner ausblenden
-    bullet.kill();
     updateScore(200);
   },
 
@@ -289,11 +273,22 @@ Game.prototype = {
     });
   },
 
+  fireBullet: function () {
+    if (game.time.now > bulletTime) {
+      const bullet = bullets.getFirstExists(false);
+      if (bullet) {
+        bullet.reset(player.x + 25, player.y);
+        bullet.body.velocity.y = -400;
+        bulletTime = game.time.now + 20;
+      }
+    }
+  },
+
   fireEnemyBullet: function (enemy) {
     const enemyBullet = enemyBullets.getFirstExists(false);
     if (enemyBullet) {
       enemyBullet.reset(enemy.x + enemy.width / 2, enemy.y + enemy.height);
-      enemyBullet.body.velocity.y = 200; // Gegner-Bullet nach unten bewegen
+      enemyBullet.body.velocity.y = 200;
     }
   },
 
@@ -405,17 +400,6 @@ Game.prototype = {
     }
   }
 };
-
-function fireBullet() {
-  if (game.time.now > bulletTime) {
-    bullet = bullets.getFirstExists(false);
-  }
-  if (bullet) {
-    bullet.reset(player.x + 25, player.y);
-    bullet.body.velocity.y = -400;
-    bulletTime = game.time.now + 20;
-  }
-}
 
 function updateScore(toAddPoints) {
   scorePoints += toAddPoints;

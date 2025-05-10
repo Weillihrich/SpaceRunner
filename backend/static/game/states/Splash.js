@@ -3,13 +3,16 @@ var Splash = function () {};
 Splash.prototype = {
 
   loadScripts: function () {
+    game.load.script('globals', staticFolder + 'lib/globals.js');
+    game.load.script('bullets', staticFolder + 'assets/Bullets.js');
     game.load.script('mixins', staticFolder + 'lib/mixins.js');
-    game.load.script('gamemenu', staticFolder + 'states/GameMenu.js');
+    game.load.script('gamemenu', staticFolder + 'states/gamemenu.js');
     game.load.script('game', staticFolder + 'states/Game.js');
-    game.load.script('gameover', staticFolder + 'states/GameOver.js');
-    game.load.script('credits', staticFolder + 'states/Credits.js');
+    game.load.script('gameover', staticFolder + 'states/gameover.js');
+    game.load.script('credits', staticFolder + 'states/credits.js');
     game.load.script('highscores', staticFolder + 'states/highscores.js');
     game.load.script('enemyPattern', staticFolder + 'assets/patterns/enemies.js');
+    game.load.script('settings', staticFolder + 'states/settings.js');
   },
 
   loadBgm: function () {
@@ -47,11 +50,12 @@ Splash.prototype = {
   },
 
   addGameStates: function () {
-    game.state.add("GameMenu", GameMenu);
-    game.state.add("Game", Game);
-    game.state.add("GameOver", GameOver);
-    game.state.add("Credits", Credits);
-    game.state.add("Highscores", Highscores);
+    game.state.add("GameMenu", GameMenu); // Stelle sicher, dass GameMenu definiert ist
+    game.state.add("Game", Game); // Stelle sicher, dass Game definiert ist
+    game.state.add("GameOver", GameOver); // Stelle sicher, dass GameOver definiert ist
+    game.state.add("Credits", Credits); // Stelle sicher, dass Credits definiert ist
+    game.state.add("Highscores", Highscores); // Stelle sicher, dass Highscores definiert ist
+    game.state.add("Settings", Settings); // Stelle sicher, dass Settings definiert ist
   },
 
   create: function() {
