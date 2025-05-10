@@ -26,6 +26,7 @@ Splash.prototype = {
     game.load.image('bullet', staticFolder + 'assets/images/bullet.png');
     game.load.image('enemy', staticFolder + 'assets/images/enemy.png');
     game.load.image('enemyBullet', staticFolder + 'assets/images/enemy-bullet.png');
+    game.load.image('boss', staticFolder + 'assets/images/boss.png');
   },
 
   init: function () {

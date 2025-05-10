@@ -6,6 +6,15 @@ let scorePoints = 0;
 let waveText;
 let waveNumber = 0;
 
+// Neue Variablen für Boss-Lebensleiste
+let bossHealth = 0;
+let bossHealthBar;
+let bossHealthBarBorder;
+
+// Neue Variablen für die Boss-Bewegung
+let bossDirection = 1; // 1 = nach rechts, -1 = nach links
+let bossSpeed = 100; // Geschwindigkeit des Bosses
+
 var stars;
 var backgroundmove;
 var player;
@@ -80,6 +89,11 @@ Game.prototype = {
     enemyBullets.setAll('outOfBoundsKill', true);
     enemyBullets.setAll('checkWorldBounds', true);
 
+    bossEnemys = game.add.group();
+    bossEnemys.enableBody = true;
+    bossEnemys.physicsBodyType = Phaser.Physics.ARCADE;
+    bossEnemys.createMultiple(1, 'boss');
+
     // Debug-Ausgabe, um sicherzustellen, dass enemyPatterns verfügbar ist
     if (typeof enemyPatterns === 'undefined') {
       console.error("enemyPatterns is not defined. Make sure enemies.js is loaded.");
@@ -130,15 +144,32 @@ Game.prototype = {
     // Kollisionserkennung zwischen Bullets und Gegnern
     game.physics.arcade.overlap(bullets, enemies, this.bulletHitsEnemy, null, this);
 
+    // Kollisionserkennung zwischen Bullets und dem Boss
+    game.physics.arcade.overlap(bullets, bossEnemys, this.bulletHitsEnemy, null, this);
+
     // Kollisionserkennung zwischen enemyBullets und der Rakete
     game.physics.arcade.overlap(enemyBullets, player, this.playerHit, null, this);
 
+    // Boss-Bewegung
+    this.moveBoss();
+
+    // Boss-Schießen
+    if (Math.random() < (0.01 + waveNumber/100)) { // 2% Chance pro Frame, dass der Boss schießt
+      this.bossFire();
+    }
+
     // Überprüfen, ob keine Gegner mehr vorhanden sind
-    if (enemies.countLiving() === 0 && !this.spawnTimer) {
+    if (enemies.countLiving() === 0 && bossEnemys.countLiving() === 0 && !this.spawnTimer) {
       this.spawnTimer = game.time.events.add(Phaser.Timer.SECOND * 1, () => {
         updateWave();
         updateScore(10000);
-        this.spawnEnemies();
+        if (waveNumber % 5 === 0) {
+          this.spawnBoss(); // Boss spawnen
+        } else {
+          this.spawnEnemies();
+        }
+
+        
         this.spawnTimer = null; // Timer zurücksetzen
       });
     }
@@ -151,6 +182,48 @@ Game.prototype = {
   },
 
   bulletHitsEnemy: function (bullet, enemy) {
+    bullet.kill(); // Bullet entfernen
+
+    if (enemy.key === 'boss') {
+      // Wenn der Boss getroffen wird
+      bossHealth -= 10; // Reduziere die Lebenspunkte
+      this.updateBossHealthBar(); // Aktualisiere die Lebensleiste
+
+      if (bossHealth <= 0) {
+        enemy.kill(); // Entferne den Boss, wenn die Lebenspunkte 0 erreichen
+        bossHealthBar.clear(); // Entferne die Lebensleiste
+      }
+    } else {
+      // Normale Gegner
+      enemy.kill();
+    }
+  },
+
+  spawnBoss: function () {
+    const bossEnemy = bossEnemys.getFirstExists(false);
+    if (bossEnemy) {
+      bossEnemy.reset(game.world.centerX - 25, 75); // Boss erscheint oben in der Mitte
+      bossHealth = 100; // Setze die Lebenspunkte des Bosses
+
+      // Erstelle die Lebensleiste
+      if (!bossHealthBar) {
+        bossHealthBar = game.add.graphics();
+      }
+      this.updateBossHealthBar();
+    }
+  },
+
+  updateBossHealthBar: function () {
+    if (bossHealthBar) {
+      bossHealthBar.clear();
+      bossHealthBar.beginFill(0xffffff); // Rote Farbe für die Lebensleiste
+      const barWidth = 200; // Breite der Lebensleiste
+      const barHeight = 20; // Höhe der Lebensleiste
+      const x = game.world.centerX - barWidth / 2; // Zentriert
+      const y = 20; 
+      bossHealthBar.drawRect(x, y, (bossHealth / 100) * barWidth, barHeight);
+      bossHealthBar.endFill();
+    }
     // Bullet und Gegner ausblenden
     bullet.kill();
     enemy.kill();
@@ -188,7 +261,7 @@ Game.prototype = {
           const enemy = enemies.getFirstExists(false);
           if (enemy) {
             enemy.reset(currentX, startY + row * (enemyHeight + 10));
-            enemy.body.velocity.y = 20;
+            enemy.body.velocity.y = 15;
           }
         }
         // X-Position wird immer aktualisiert – egal ob 0 oder 1
@@ -211,7 +284,7 @@ Game.prototype = {
 
     // Zufällige Chance, dass ein Gegner schießt
     Object.values(bottomEnemies).forEach(enemy => {
-      if (Math.random() < 0.001) { // 1% Chance pro Frame
+      if (Math.random() < (0.000001 + waveNumber/100000)) { // 1% Chance pro Frame
         this.fireEnemyBullet(enemy);
       }
     });
@@ -259,6 +332,78 @@ Game.prototype = {
     game.time.events.add(Phaser.Timer.SECOND * 3, () => {
       game.state.start("GameOver"); // Neustart des Spiels
     });
+  },
+
+  moveBoss: function () {
+    const bossEnemy = bossEnemys.getFirstExists(true); // Hole den existierenden Boss
+    if (bossEnemy) {
+      bossEnemy.x += bossDirection * bossSpeed * game.time.physicsElapsed; // Bewege den Boss
+
+      // Überprüfe, ob der Boss den linken oder rechten Rand erreicht hat
+      if (bossEnemy.x <= 0 || bossEnemy.x + bossEnemy.width >= game.world.width) {
+        bossDirection *= -1; // Richtung umkehren
+      }
+    }
+  },
+
+  bossFire: function () {
+    const bossEnemy = bossEnemys.getFirstExists(true); // Hole den existierenden Boss
+    if (!bossEnemy) return;
+
+    const randomShotType = Math.floor(Math.random() * 3); // Zufälliger Schusstyp (0, 1 oder 2)
+
+    switch (randomShotType) {
+      case 0: // Gerade Schüsse
+        this.fireStraight(bossEnemy);
+        break;
+      case 1: // Zielgerichtete Schüsse
+        this.fireTargeted(bossEnemy);
+        break;
+      case 2: // Diagonale Schüsse
+        this.fireDiagonal(bossEnemy);
+        break;
+    }
+  },
+
+  fireStraight: function (bossEnemy) {
+    const bullet = enemyBullets.getFirstExists(false);
+    if (bullet) {
+      bullet.reset(bossEnemy.x + bossEnemy.width / 2, bossEnemy.y + bossEnemy.height);
+      bullet.body.velocity.y = 200; // Bewegt sich gerade nach unten
+    }
+  },
+
+  fireTargeted: function (bossEnemy) {
+    const bullet = enemyBullets.getFirstExists(false);
+    if (bullet) {
+      bullet.reset(bossEnemy.x + bossEnemy.width / 2, bossEnemy.y + bossEnemy.height);
+
+      // Berechne die Richtung zum Spieler
+      const dx = player.x - bullet.x;
+      const dy = player.y - bullet.y;
+      const magnitude = Math.sqrt(dx * dx + dy * dy);
+
+      // Normalisiere die Richtung und setze die Geschwindigkeit
+      bullet.body.velocity.x = (dx / magnitude) * 200;
+      bullet.body.velocity.y = (dy / magnitude) * 200;
+    }
+  },
+
+  fireDiagonal: function (bossEnemy) {
+    const bulletLeft = enemyBullets.getFirstExists(false);
+    const bulletRight = enemyBullets.getFirstExists(false);
+
+    if (bulletLeft) {
+      bulletLeft.reset(bossEnemy.x + bossEnemy.width / 2, bossEnemy.y + bossEnemy.height);
+      bulletLeft.body.velocity.x = -150; // Diagonal nach links
+      bulletLeft.body.velocity.y = 200;
+    }
+
+    if (bulletRight) {
+      bulletRight.reset(bossEnemy.x + bossEnemy.width / 2, bossEnemy.y + bossEnemy.height);
+      bulletRight.body.velocity.x = 150; // Diagonal nach rechts
+      bulletRight.body.velocity.y = 200;
+    }
   }
 };
 
