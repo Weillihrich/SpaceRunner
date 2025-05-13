@@ -61,7 +61,7 @@ Game.prototype = {
     backgroundmove = 2;
 
     scorePoints = 0;
-    waveNumber = 0;
+    waveNumber = 1;
     if (isPaused) {
       this.resumeGame();
     }
